@@ -1,0 +1,96 @@
+{
+  "name": "web-components-demo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/web-components-demo/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/web-components-demo",
+        "index": "apps/web-components-demo/src/index.html",
+        "baseHref": "/",
+        "main": "apps/web-components-demo/src/main.tsx",
+        "tsConfig": "apps/web-components-demo/tsconfig.app.json",
+        "assets": [
+          "apps/web-components-demo/src/favicon.ico",
+          "apps/web-components-demo/src/assets"
+        ],
+        "styles": ["apps/web-components-demo/src/styles.less"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/web-components-demo/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/web-components-demo/src/environments/environment.ts",
+              "with": "apps/web-components-demo/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "web-components-demo:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "web-components-demo:build:development"
+        },
+        "production": {
+          "buildTarget": "web-components-demo:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/web-components-demo/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "web-components-demo:build"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/web-components-demo/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
